@@ -48,7 +48,11 @@ export default function PostForm({ editItem, onClearEdit }: Props) {
         value={description}
         onChange={(e) => setDescription(e.target.value)}
       />
-      <Button onClick={handleSubmit}>{editItem ? "Update" : "Add"}</Button>
+      <Button
+        className="cursor-pointer hover:bg-red-500"
+        onClick={handleSubmit}>
+        {editItem ? "Update" : "Add"}
+      </Button>
     </div>
   );
 }

@@ -30,10 +30,14 @@ export default function PostTable() {
               <td className="p-2">{item.title}</td>
               <td className="p-2">{item.description}</td>
               <td className="p-2 space-x-2">
-                <Button onClick={() => setEditItem(item)} size="sm">
+                <Button
+                  className="cursor-pointer"
+                  onClick={() => setEditItem(item)}
+                  size="sm">
                   Edit
                 </Button>
                 <Button
+                  className="cursor-pointer"
                   onClick={() => deletePost(item.id)}
                   variant="destructive"
                   size="sm">
