@@ -3,6 +3,7 @@ import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Button } from "@/components/ui/button";
 import { usePostStore, Item } from "@/store/usePostStore";
+import { postSchema } from "@/validation/postSchema"; // import the Zod schema
 
 type Props = {
   editItem: Item | null;
@@ -12,9 +13,13 @@ type Props = {
 export default function PostForm({ editItem, onClearEdit }: Props) {
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
+  const [formErrors, setFormErrors] = useState<{
+    title?: string[];
+    description?: string[];
+  }>({});
   const addPost = usePostStore((state) => state.addPost);
   const updatePost = usePostStore((state) => state.updatePost);
-  const error = usePostStore((state) => state.error); // Access the error from store
+  const error = usePostStore((state) => state.error);
 
   useEffect(() => {
     if (editItem) {
@@ -27,12 +32,23 @@ export default function PostForm({ editItem, onClearEdit }: Props) {
   }, [editItem]);
 
   const handleSubmit = () => {
+    const result = postSchema.safeParse({ title, description });
+
+    if (!result.success) {
+      const fieldErrors = result.error.flatten().fieldErrors;
+      setFormErrors(fieldErrors);
+      return;
+    }
+
+    setFormErrors({});
+
     if (editItem) {
       updatePost(editItem.id, title, description);
       onClearEdit();
     } else {
       addPost(title, description);
     }
+
     setTitle("");
     setDescription("");
   };
@@ -44,14 +60,21 @@ export default function PostForm({ editItem, onClearEdit }: Props) {
         value={title}
         onChange={(e) => setTitle(e.target.value)}
       />
+      {formErrors.title && (
+        <p className="text-red-500 text-sm">{formErrors.title[0]}</p>
+      )}
+
       <Textarea
         placeholder="Description"
         value={description}
         onChange={(e) => setDescription(e.target.value)}
       />
-      {error && (
-        <div className="text-red-500 text-sm">{error}</div> // Show error message
+      {formErrors.description && (
+        <p className="text-red-500 text-sm">{formErrors.description[0]}</p>
       )}
+
+      {error && <div className="text-red-500 text-sm">{error}</div>}
+
       <Button
         className="cursor-pointer hover:bg-red-500"
         onClick={handleSubmit}>
