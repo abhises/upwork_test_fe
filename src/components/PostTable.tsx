@@ -13,7 +13,7 @@ export default function PostTable() {
 
   return (
     <div className="p-4 max-w-3xl mx-auto space-y-6">
-      <h1 className="text-2xl font-bold">CRUD - Title & Description</h1>
+      <h1 className="text-2xl font-bold">CRUD - Todo-list App</h1>
       <PostForm editItem={editItem} onClearEdit={() => setEditItem(null)} />
 
       <table className="w-full border mt-4">
