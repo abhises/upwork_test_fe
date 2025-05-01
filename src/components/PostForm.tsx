@@ -14,6 +14,7 @@ export default function PostForm({ editItem, onClearEdit }: Props) {
   const [description, setDescription] = useState("");
   const addPost = usePostStore((state) => state.addPost);
   const updatePost = usePostStore((state) => state.updatePost);
+  const error = usePostStore((state) => state.error); // Access the error from store
 
   useEffect(() => {
     if (editItem) {
@@ -48,6 +49,9 @@ export default function PostForm({ editItem, onClearEdit }: Props) {
         value={description}
         onChange={(e) => setDescription(e.target.value)}
       />
+      {error && (
+        <div className="text-red-500 text-sm">{error}</div> // Show error message
+      )}
       <Button
         className="cursor-pointer hover:bg-red-500"
         onClick={handleSubmit}>
